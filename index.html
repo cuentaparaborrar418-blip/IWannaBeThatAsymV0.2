@@ -2,14 +2,224 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IWannaBeThatAsym</title>
-    <meta http-equiv="refresh" content="0; url=IWannaBeThatAsym/index.html">
-    <script>
-        window.location.replace("IWannaBeThatAsym/index.html");
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Golf Ball Factory: Asymmetric Survival (Multi-Survivor Edition)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <p>Abriendo IWannaBeThatAsym...</p>
+<body class="text-white overflow-hidden w-full h-screen flex flex-col items-center justify-center font-sans">
+    <div id="loading-overlay" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center text-center p-6">
+        <div class="text-4xl mb-4 animate-pulse">⚙️</div>
+        <h2 class="text-xl font-black tracking-widest text-cyan-400 font-mono">CARGANDO FÁBRICA</h2>
+        <p class="text-xs text-slate-500 font-mono mt-2">Preparando audio y sistemas de juego...</p>
+        <div class="w-56 h-1.5 bg-slate-800 rounded-full mt-5 overflow-hidden">
+            <div class="h-full w-1/2 bg-gradient-to-r from-cyan-500 to-emerald-400 animate-pulse"></div>
+        </div>
+    </div>
+
+    <!-- MENÚ PRINCIPAL -->
+    <div id="lobby-screen" class="absolute inset-0 bg-slate-950 z-30 flex flex-col items-center justify-center p-4 md:p-6 text-center overflow-y-auto transition-all duration-300">
+        <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 mb-1 tracking-wider animate-pulse">
+            GOLF BALL FACTORY
+        </h1>
+        <p class="text-xs text-slate-400 max-w-lg mb-6 font-mono">
+            Simulador de supervivencia asimétrica lateral 2D. Elige tu bando y tu personaje.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 mb-5 w-full max-w-xl">
+            <button id="menu-survivor" class="flex-1 bg-slate-900/90 hover:bg-slate-850 border-2 border-emerald-500/50 hover:border-emerald-400 p-6 rounded-2xl transition-all duration-200 transform hover:scale-[1.02] flex flex-col items-center group">
+                <span class="text-3xl mb-2">🛡️</span>
+                <h3 class="text-lg font-bold text-emerald-400 tracking-wide">SURVIVOR</h3>
+                <span class="text-[9px] font-black text-slate-500 font-mono tracking-widest uppercase">Elige tu superviviente</span>
+            </button>
+            <button id="menu-killer" class="flex-1 bg-slate-900/90 hover:bg-slate-850 border-2 border-red-500/50 hover:border-red-400 p-6 rounded-2xl transition-all duration-200 transform hover:scale-[1.02] flex flex-col items-center group">
+                <span class="text-3xl mb-2">🤖</span>
+                <h3 class="text-lg font-bold text-red-400 tracking-wide">KILLER</h3>
+                <span class="text-[9px] font-black text-slate-500 font-mono tracking-widest uppercase">Elige tu asesino</span>
+            </button>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-3 mb-5 max-w-xl">
+            <button id="btn-open-bio" class="bg-gradient-to-r from-slate-900 to-slate-950 border border-slate-700 hover:border-emerald-500 text-emerald-400 px-4 py-2 rounded-xl font-bold font-mono text-xs flex items-center gap-2 shadow-lg active:scale-95 transition-all duration-150">
+                <span>📖</span> MANUAL DE PERSONAJES
+            </button>
+            <button id="btn-open-settings" class="bg-gradient-to-r from-slate-900 to-slate-950 border border-slate-700 hover:border-cyan-500 text-cyan-400 px-4 py-2 rounded-xl font-bold font-mono text-xs flex items-center gap-2 shadow-lg active:scale-95 transition-all duration-150">
+                <span>⚙️</span> CONFIGURACIÓN
+            </button>
+        </div>
+
+        <button id="menu-lms" class="mb-5 w-full max-w-xl bg-gradient-to-r from-fuchsia-950 to-pink-950 hover:from-fuchsia-900 hover:to-pink-900 border-2 border-pink-500/60 hover:border-pink-400 p-3 rounded-2xl transition-all duration-200 transform hover:scale-[1.01] flex items-center justify-center gap-3">
+            <span class="text-xl">⚡</span>
+            <span class="text-left"><strong class="block text-sm font-black text-pink-400 tracking-wide">LMS INSTANTÁNEO</strong><small class="text-[9px] text-slate-400 font-mono">Comienza directamente como último survivor en pie</small></span>
+        </button>
+
+        <div class="text-[10px] text-slate-500 font-mono max-w-md mb-5">
+            PC: <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">W,A,S,D</kbd>/<kbd class="px-1.5 py-0.5 bg-slate-800 rounded">▲▼◀▶</kbd>. Habilidades: <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">1,2,3</kbd>. Objeto: <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">4</kbd>. Celebrar: <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">E</kbd> o quédate quieto 5s.
+        </div>
+
+        <div class="w-full max-w-xl border-t border-slate-800 pt-4">
+            <h2 class="text-xs font-black text-slate-400 font-mono tracking-widest uppercase mb-3">🕹️ Modos de Juego</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+                <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-3">
+                    <h3 class="text-emerald-400 font-bold text-xs font-mono">SUPERVIVENCIA ESTÁNDAR</h3>
+                    <p class="text-[10px] text-slate-500 font-mono mt-1">8 survivors vs 1 killer. Escapa por los portales holográficos antes de que el tiempo se agote.</p>
+                </div>
+                <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-3">
+                    <h3 class="text-pink-400 font-bold text-xs font-mono">ÚLTIMO EN PIE (LMS)</h3>
+                    <p class="text-[10px] text-slate-500 font-mono mt-1">Se activa cuando queda 1 survivor. Música acelerada, salud duplicada y temporizador extendido.</p>
+                </div>
+                <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-3">
+                    <h3 class="text-cyan-400 font-bold text-xs font-mono">MODO ESPECTADOR</h3>
+                    <p class="text-[10px] text-slate-500 font-mono mt-1">Si escapas antes que el resto, observa en vivo cómo termina la partida para los demás survivors.</p>
+                </div>
+                <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-3">
+                    <h3 class="text-amber-400 font-bold text-xs font-mono">PANTALLA DE RESULTADOS</h3>
+                    <p class="text-[10px] text-slate-500 font-mono mt-1">Al terminar, revisa quién escapó y quién no en el muro de monitores de la fábrica.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SELECCIÓN DE PERSONAJE (GENERADO DINÁMICAMENTE) -->
+    <div id="character-select-modal" class="absolute inset-0 bg-slate-950/98 z-40 flex flex-col items-center justify-center p-4 md:p-6 text-center hidden transition-all duration-300 overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 md:p-6 w-full max-w-2xl shadow-2xl space-y-4">
+            <h2 id="character-select-title" class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 font-mono tracking-wider">SELECCIONA TU PERSONAJE</h2>
+             <button id="btn-random-map" class="w-full bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold py-2 rounded-xl text-xs uppercase tracking-wider transition-all">🎲 MAPA ALEATORIO</button>
+            <div id="character-select-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+            <button id="btn-close-character-select" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">Volver</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE BIOGRAFÍAS (GENERADO DINÁMICAMENTE) -->
+    <div id="bio-modal" class="absolute inset-0 bg-slate-950/98 z-40 flex flex-col items-center justify-center p-4 md:p-6 text-center hidden transition-all duration-300 overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 md:p-6 w-full max-w-3xl shadow-2xl space-y-4 text-left max-h-[90vh] overflow-y-auto">
+            <h2 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 font-mono tracking-wider text-center">
+                MANUAL DE INTELIGENCIA DE LA FÁBRICA
+            </h2>
+            <div id="bio-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            <button id="btn-close-bio" class="w-full bg-gradient-to-r from-emerald-600 to-cyan-500 hover:from-emerald-500 hover:to-cyan-400 text-white font-bold py-2.5 rounded-xl shadow-lg active:scale-95 transition-all text-xs uppercase tracking-wider text-center">
+                Entendido, Cerrar Manual
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURACIÓN -->
+    <div id="settings-modal" class="absolute inset-0 bg-slate-950/98 z-40 flex flex-col items-center justify-center p-6 text-center hidden transition-all duration-300">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 w-full max-w-lg shadow-2xl space-y-6">
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 font-mono tracking-wider">
+                PANEL DE CONFIGURACIÓN
+            </h2>
+            <div class="space-y-2 text-left">
+                <label class="text-xs font-bold text-slate-400 font-mono flex justify-between">
+                    <span>🔊 VOLUMEN DE AUDIO:</span>
+                    <span id="volume-val-display" class="text-cyan-400">100%</span>
+                </label>
+                <input id="slider-volume" type="range" min="0" max="300" value="100" class="w-full accent-cyan-500 bg-slate-800 h-2 rounded-lg cursor-pointer">
+            </div>
+            <div class="space-y-3 text-left">
+                <label class="text-xs font-bold text-slate-400 font-mono block">🎮 DISPOSICIÓN DE CONTROLES MÓVILES:</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="ctrl-align-left" class="bg-slate-850 hover:bg-slate-800 border-2 border-cyan-500/80 text-white font-bold py-2 rounded-xl text-xs font-mono transition-all">Joystick Izq / Botones Der</button>
+                    <button id="ctrl-align-right" class="bg-slate-800 hover:bg-slate-750 border-2 border-slate-800 text-slate-400 font-bold py-2 rounded-xl text-xs font-mono transition-all">Botones Izq / Joystick Der</button>
+                </div>
+            </div>
+            <div class="space-y-3 text-left">
+                <label class="text-xs font-bold text-slate-400 font-mono block">🎩 SELECCIONA TU SOMBRERO EXCLUSIVO (Sólo Survivors):</label>
+                <div id="hat-selection-grid" class="grid grid-cols-4 gap-2"></div>
+            </div>
+            <div class="space-y-2 text-left">
+                <label class="text-xs font-bold text-slate-400 font-mono flex items-center justify-between cursor-pointer">
+                    <span>🎉 EMOTES Y CELEBRACIONES:</span>
+                    <input id="toggle-emotes" type="checkbox" checked class="w-5 h-5 accent-cyan-500 cursor-pointer">
+                </label>
+            </div>
+            <button id="btn-close-settings" class="w-full bg-gradient-to-r from-cyan-600 to-blue-500 hover:from-cyan-500 hover:to-blue-400 text-white font-bold py-3 rounded-2xl shadow-lg active:scale-95 transition-all text-xs uppercase tracking-wider border border-cyan-400">
+                Guardar Configuración
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL DEL JUEGO -->
+    <div id="game-container" class="relative w-full h-full max-w-6xl max-h-[750px] bg-slate-950 border border-slate-800 md:rounded-2xl overflow-hidden shadow-2xl flex flex-col select-none">
+
+        <div id="lms-cinematic-overlay" class="absolute inset-0 bg-red-950/40 border-8 border-red-500/80 z-20 flex flex-col items-center justify-center pointer-events-none transition-all duration-500 opacity-0 scale-95">
+            <div class="text-center">
+                <h2 class="text-5xl md:text-6xl font-black text-red-500 tracking-widest uppercase drop-shadow-[0_0_20px_rgba(239,68,68,0.85)] animate-pulse">SISTEMA SOBRECARGADO</h2>
+                <p class="text-xl md:text-2xl font-mono text-white mt-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.9)] tracking-wide">MÚSICA ACELERADA AL MÁXIMO</p>
+                <div class="w-80 h-1.5 bg-red-500/35 mx-auto mt-5 relative overflow-hidden rounded-full">
+                    <div class="absolute h-full bg-red-500 w-1/2 rounded animate-ping"></div>
+                </div>
+            </div>
+        </div>
+
+        <header id="game-hud-header" class="absolute top-0 left-0 right-0 z-10 bg-slate-900/85 backdrop-blur-md px-3 py-2 flex justify-between items-center border-b border-slate-800 text-xs md:text-sm hidden">
+            <div class="flex items-center space-x-2">
+                <span id="role-badge" class="tracking-wider uppercase font-bold px-2 py-0.5 rounded text-[10px]">SOBREVIVIENTE</span>
+                <div class="flex items-center space-x-1 font-mono">
+                    <span class="text-slate-400">ACTIVOS:</span>
+                    <span id="allies-counter" class="text-emerald-400 font-bold">8/8</span>
+                </div>
+            </div>
+            <div class="flex flex-col items-center">
+                <div id="timer-display" class="font-mono text-lg md:text-2xl font-black text-amber-400 bg-slate-950/80 px-4 py-0.5 rounded-lg border border-slate-800 tracking-wider">05:15</div>
+                <span id="lms-badge" class="text-[9px] font-black tracking-widest text-pink-500 animate-pulse hidden">¡ÚLTIMO EN PIE! (LMS)</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span id="hp-label" class="text-[10px] font-black text-slate-400 uppercase">HP JUGADOR:</span>
+                <div class="w-20 md:w-32 bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700 relative">
+                    <div id="player-hp-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-full transition-all duration-100"></div>
+                    <span id="player-hp-text" class="absolute inset-0 flex items-center justify-center font-mono text-[9px] font-bold">100/100</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="system-alert" class="absolute top-16 left-4 right-4 z-10 bg-slate-900/95 border border-cyan-500/30 p-2 rounded-lg pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-2 flex items-center gap-3">
+            <div class="w-2 h-2 bg-cyan-500 rounded-full animate-ping"></div>
+            <p id="system-alert-text" class="text-[11px] text-cyan-300 font-mono"></p>
+        </div>
+
+        <div class="absolute top-16 right-4 z-10 flex flex-col gap-1 md:gap-1.5 pointer-events-none max-h-[55%] overflow-y-auto animate-fade-in hidden" id="survivors-hud-list"></div>
+
+        <div id="spectator-banner" class="absolute top-16 left-1/2 -translate-x-1/2 z-10 bg-cyan-950/90 border border-cyan-500/60 px-4 py-1.5 rounded-full pointer-events-none hidden">
+            <span class="text-[10px] md:text-xs font-black text-cyan-300 font-mono tracking-widest uppercase">👁️ MODO ESPECTADOR — Ya escapaste</span>
+        </div>
+
+        <canvas id="gameCanvas" class="w-full h-full block bg-slate-950"></canvas>
+
+        <div id="mobile-controls-container" class="absolute bottom-4 left-4 right-4 z-10 flex flex-row justify-between items-end pointer-events-none hidden">
+            <div class="pointer-events-auto relative w-32 h-32 bg-slate-900/70 rounded-full border border-slate-600/50 backdrop-blur-md flex items-center justify-center shadow-2xl" id="joystick-zone">
+                <div id="joystick-handle" class="w-12 h-12 bg-slate-300 rounded-full shadow-inner border border-white/60 absolute cursor-pointer"></div>
+            </div>
+            <div class="relative pointer-events-none w-56 h-56 flex items-end justify-end" id="mobile-right-panel">
+                <button id="btn-mobile-jump" class="absolute right-0 bottom-0 w-24 h-24 bg-blue-600 active:bg-blue-500 text-white font-bold rounded-full border-4 border-blue-400 flex items-center justify-center shadow-2xl active:scale-90 transition-all duration-150 pointer-events-auto z-20">
+                    <span class="text-4xl">▲</span>
+                </button>
+                <div class="absolute inset-0 pointer-events-none" id="abilities-panel"></div>
+                <button id="btn-mobile-item" class="absolute pointer-events-auto z-20 w-14 h-14 rounded-full bg-amber-600 border-2 border-amber-300 flex items-center justify-center text-2xl shadow-2xl active:scale-90 transition-all hidden" style="left:-10px; bottom:70px;"></button>
+            </div>
+        </div>
+
+        <div id="results-screen" class="absolute inset-0 bg-slate-950/95 z-40 flex flex-col items-center justify-center p-4 md:p-6 text-center transition-all duration-300 scale-0 opacity-0 pointer-events-none overflow-y-auto">
+            <h2 id="results-title" class="text-2xl md:text-4xl font-black text-emerald-500 mb-2 tracking-wide">RESULTADO</h2>
+            <p id="results-message" class="text-xs md:text-sm text-slate-400 max-w-md mb-3 font-mono"></p>
+            <canvas id="results-canvas" width="640" height="280" class="w-full max-w-xl rounded-xl border border-slate-800 shadow-2xl mb-4"></canvas>
+            <button id="btn-play-again" class="pointer-events-auto bg-gradient-to-r from-cyan-600 to-emerald-500 hover:from-cyan-500 hover:to-emerald-400 text-white font-bold py-2.5 px-8 rounded-full shadow-lg active:scale-95 transition-all duration-150 text-xs uppercase tracking-wider border border-cyan-400">
+                Volver al Lobby
+            </button>
+        </div>
+    </div>
+
+    <script src="js/audio.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/abilities.js"></script>
+    <script src="js/items.js"></script>
+    <script src="js/characters.js"></script>
+    <script src="js/killer.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/survivors.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/mobile.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
